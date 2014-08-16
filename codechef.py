@@ -1,3 +1,4 @@
+#ijkl
 import sublime, sublime_plugin
 import urllib, urllib2, httplib, cookielib
 import re
@@ -41,10 +42,10 @@ class CodechefCall(threading.Thread):
     sublime.error_message(err)
     self.result = False
 
-class CodechefCommand(sublime_plugin.TextCommand):
-  def upload_solution(problem_code):
-    print problem_code
+def upload_solution(problem_code):
+  print problem_code
 
+class CodechefCommand(sublime_plugin.TextCommand):
   def run(self, edit):
     file_name = self.view.file_name()
     filetype =  file_name[file_name.rfind('.')+1:]
@@ -61,9 +62,13 @@ class CodechefCommand(sublime_plugin.TextCommand):
       except AttributeError:
         problem_code = self.view.window().show_input_panel('Enter the Problem Code:', 'ffs',upload_solution,None,None)
 
-    threads = []
-    for sel in sels:
-      string = self.view.substr(sel)
-      thread = PrefixrApiCall(sel, string, 5)
-      threads.append(thread)
-      thread.start()
+    s = sublime.load_settings("Codechef.sublime-settings")
+    if s.get('username'):
+      print (s.get('username'))
+
+    # threads = []
+    # for sel in sels:
+    #   string = self.view.substr(sel)
+    #   thread = PrefixrApiCall(sel, string, 5)
+    #   threads.append(thread)
+    #   thread.start()
