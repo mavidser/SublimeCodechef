@@ -1,4 +1,4 @@
-#ijkl
+#TEST
 import sublime, sublime_plugin
 import urllib, urllib2, httplib, cookielib
 import re
@@ -50,18 +50,18 @@ class CodechefCommand(sublime_plugin.TextCommand):
     file_name = self.view.file_name()
     filetype =  file_name[file_name.rfind('.')+1:]
     line = self.view.substr(self.view.line(0))
-    if filetype == 'py':
+    if filetype == 'cpp' or filetype == 'c' or filetype == 'java' or filetype == 'js':
+      try:
+        problem_code = re.search('//\s*\w*\s*$', line).string.strip()[2:].strip()
+      except AttributeError:
+        problem_code = self.view.window().show_input_panel('Enter the Problem Code:', '',upload_solution,None,None)
+    elif filetype == 'py' or filetype == 'pl':
       try:
         problem_code = re.search('#\s*\w*\s*$',line).string.strip()[1:].strip()
         upload_solution(problem_code)
       except AttributeError:
-        problem_code = self.view.window().show_input_panel('Enter the Problem Code:', 'ffs',upload_solution,None,None)
-    elif filetype == 'cpp' or filetype == 'c':
-      try:
-        problem_code = re.search('//\s*\w*\s*$', line).string.strip()[2:].strip()
-      except AttributeError:
-        problem_code = self.view.window().show_input_panel('Enter the Problem Code:', 'ffs',upload_solution,None,None)
-
+        problem_code = self.view.window().show_input_panel('Enter the Problem Code:', '',upload_solution,None,None)
+    
     s = sublime.load_settings("Codechef.sublime-settings")
     if s.get('username'):
       print (s.get('username'))
